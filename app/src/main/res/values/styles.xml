@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Feedback6.Day" parent="Theme.Day" >
+    <style name="Theme.Day" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:background">@color/colorBackground</item>
         <item name="android:textColor">@color/textColor</item>
     </style>
 
-    <style name="Theme.Feedback6.Night" parent="Theme.Night" >
+    <style name="Theme.Night" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimaryNight</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
         <item name="android:background">@color/colorBackgroundNight</item>

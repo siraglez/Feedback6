@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configuración"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
+        android:layout_marginBottom="24dp" />
+
+    <Switch
+        android:id="@+id/switchTemaOscuro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Modo Oscuro" />
+
+    <Button
+        android:id="@+id/btnBackup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Realizar Copia de Seguridad"
+        android:textColor="@color/textColor"
+        android:backgroundTint="@color/colorPrimary" />
+
+    <Button
+        android:id="@+id/btnRestore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Restaurar Datos"
+        android:textColor="@color/textColor"
+        android:backgroundTint="@color/colorPrimaryDark" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnVolver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volver"
+            android:textColor="@color/textColor"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:textColor="@color/textColor"
+            android:backgroundTint="@color/colorPrimaryDark" />
+    </LinearLayout>
+
+</LinearLayout>
