@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.feedback6.R
 import com.example.feedback6.baseDeDatos.DatabaseProvider
 import com.example.feedback6.dao.UsuarioDao
 import com.example.feedback6.dataClasses.Usuario
