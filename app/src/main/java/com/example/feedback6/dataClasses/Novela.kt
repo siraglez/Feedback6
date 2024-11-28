@@ -12,6 +12,7 @@ data class Novela(
     val sinopsis: String,
     var esFavorita: Boolean = false,
     val resenas: MutableList<String> = mutableListOf(),
+    val lugar: String? = null,
     val latitud: Double? = null,
     val longitud: Double? = null
 ) : Serializable
