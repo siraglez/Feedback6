@@ -30,7 +30,7 @@ class AgregarNovelaFragment : Fragment() {
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
         val etAnio = view.findViewById<EditText>(R.id.etAnio)
         val etSinopsis = view.findViewById<EditText>(R.id.etSinopsis)
-        val etLugar = view.findViewById<EditText>(R.id.etLugar)
+        val etUbicacion = view.findViewById<EditText>(R.id.etUbicacion)
         val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
@@ -39,19 +39,18 @@ class AgregarNovelaFragment : Fragment() {
             val autor = etAutor.text.toString()
             val anio = etAnio.text.toString().toIntOrNull()
             val sinopsis = etSinopsis.text.toString()
-            val lugar = etLugar.text.toString()
+            val ubicacion = etUbicacion.text.toString()
 
-            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && lugar.isNotBlank()) {
+            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && ubicacion.isNotBlank()) {
                 GlobalScope.launch(Dispatchers.IO) {
-                    val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(requireContext(), lugar)
+                    val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(requireContext(), ubicacion)
                     if (coordenadas != null) {
                         val nuevaNovela = Novela(
                             titulo = titulo,
                             autor = autor,
                             anioPublicacion = anio,
                             sinopsis = sinopsis,
-                            latitud = coordenadas.first,
-                            longitud = coordenadas.second
+                            ubicacion = ubicacion
                         )
                         novelaDao.agregarNovela(nuevaNovela)
                         withContext(Dispatchers.Main) {

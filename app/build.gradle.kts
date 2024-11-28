@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.example.feedback6"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.feedback6"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

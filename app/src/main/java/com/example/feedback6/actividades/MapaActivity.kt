@@ -1,13 +1,11 @@
 package com.example.feedback6.actividades
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.feedback6.R
 import com.example.feedback6.baseDeDatos.DatabaseProvider
+import com.example.feedback6.dao.NovelaDao
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -20,44 +18,41 @@ import kotlinx.coroutines.withContext
 
 class MapaActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
-    private val novelaDao by lazy { DatabaseProvider.getDatabase(this).novelaDao() }
+    private lateinit var map: GoogleMap
+    private lateinit var novelaDao: NovelaDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mapa)
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        novelaDao = DatabaseProvider.getDatabase(this).novelaDao()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            mMap.isMyLocationEnabled = true
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                1
-            )
-        }
-
+        map = googleMap
         GlobalScope.launch(Dispatchers.IO) {
             val novelas = novelaDao.obtenerNovelas()
-            val groupedNovelas = novelas.groupBy { Pair(it.latitud, it.longitud) }
-
             withContext(Dispatchers.Main) {
-                groupedNovelas.forEach { (coords, novelas) ->
-                    val location = LatLng(coords.first!!, coords.second!!)
-                    val markerTitle = novelas.joinToString(", ") { it.titulo }
-                    mMap.addMarker(MarkerOptions().position(location).title(markerTitle))
+                novelas.forEach { novela ->
+                    val location = obtenerCoordenadasDesdeUbicacion(novela.ubicacion)
+                    if (location != null) {
+                        map.addMarker(MarkerOptions().position(location).title(novela.titulo))
+                    }
                 }
             }
         }
+    }
+
+    private fun obtenerCoordenadasDesdeUbicacion(ubicacion: String): LatLng? {
+        // Utiliza Geocoder para convertir ubicaciones en coordenadas
+        val geocoder = Geocoder(this)
+        val addresses = geocoder.getFromLocationName(ubicacion, 1)
+        return if (addresses!!.isNotEmpty()) {
+            val location = addresses[0]
+            LatLng(location.latitude, location.longitude)
+        } else null
     }
 }

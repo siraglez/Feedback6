@@ -31,4 +31,12 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:textColor="@color/textColor"
         android:layout_marginBottom="55dp"/>
+
+    <Button
+        android:id="@+id/btnVerMapa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mapa"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/textColor" />
 </LinearLayout>

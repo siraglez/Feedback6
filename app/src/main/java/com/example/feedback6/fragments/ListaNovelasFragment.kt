@@ -1,6 +1,7 @@
 package com.example.feedback6.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
+import com.example.feedback6.actividades.MapaActivity
 import com.example.feedback6.adapters.NovelaAdapter
 import com.example.feedback6.baseDeDatos.DatabaseProvider
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +44,7 @@ class ListaNovelasFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_lista_novelas, container, false)
         val listViewNovelas = view.findViewById<ListView>(R.id.listViewNovelas)
         val btnAgregarNovela = view.findViewById<Button>(R.id.btnAgregarNovela)
+        val btnVerMapa = view.findViewById<Button>(R.id.btnVerMapa)
 
         GlobalScope.launch(Dispatchers.IO) {
             val novelas = novelaDao.obtenerNovelas()
@@ -58,6 +61,11 @@ class ListaNovelasFragment : Fragment() {
 
         btnAgregarNovela.setOnClickListener {
             (activity as? com.example.feedback6.actividades.MainActivity)?.mostrarAgregarNovelaFragment()
+        }
+
+        btnVerMapa.setOnClickListener {
+            val intent = Intent(activity, MapaActivity::class.java)
+            startActivity(intent)
         }
 
         return view

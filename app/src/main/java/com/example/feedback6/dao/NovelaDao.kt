@@ -14,6 +14,9 @@ interface NovelaDao {
     @Query("SELECT * FROM novelas")
     suspend fun obtenerNovelas(): List<Novela>
 
+    @Query("SELECT * FROM novelas WHERE ubicacion = :ubicacion")
+    suspend fun obtenerNovelasPorUbicacion(ubicacion: String): List<Novela>
+
     @Query("SELECT * FROM novelas WHERE esFavorita = 1")
     suspend fun obtenerNovelasFavoritas(): List<Novela>
 

@@ -38,10 +38,10 @@
         android:minHeight="48dp" />
 
     <EditText
-        android:id="@+id/etLugar"
+        android:id="@+id/etUbicacion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Lugar (ej: Madrid, Londres)"
+        android:hint="Ubicación (ej: Madrid, Londres)"
         android:minHeight="48dp" />
 
     <Button
