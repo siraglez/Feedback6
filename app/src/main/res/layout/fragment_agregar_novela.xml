@@ -37,6 +37,22 @@
         android:inputType="textMultiLine"
         android:minHeight="48dp" />
 
+    <EditText
+        android:id="@+id/etLatitud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Latitud"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/etLongitud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Longitud"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
     <Button
         android:id="@+id/btnAgregar"
         android:layout_width="match_parent"

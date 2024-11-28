@@ -31,6 +31,10 @@
             android:name=".actividades.ConfiguracionActivity"
             android:exported="true"
             android:label="@string/app_name"/>
+        <activity
+            android:name=".actividades.MapaActivity"
+            android:exported="true"
+            android:label="@string/app_name"/>
 
         <receiver android:name=".widgets.NovelasFavoritasWidget"
             android:label="Novelas Favoritas Widget"
@@ -50,5 +54,7 @@
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>
