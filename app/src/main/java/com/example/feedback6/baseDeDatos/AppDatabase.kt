@@ -9,7 +9,7 @@ import com.example.feedback6.dataClasses.*
 
 @Database(
     entities = [Usuario::class, Novela::class, Resena::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 
