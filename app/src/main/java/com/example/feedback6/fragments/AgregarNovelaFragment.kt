@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 import com.example.feedback6.dataClasses.Novela
 import com.example.feedback6.baseDeDatos.DatabaseProvider
+import com.example.feedback6.utils.GeocodingUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,8 +30,7 @@ class AgregarNovelaFragment : Fragment() {
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
         val etAnio = view.findViewById<EditText>(R.id.etAnio)
         val etSinopsis = view.findViewById<EditText>(R.id.etSinopsis)
-        val etLatitud = view.findViewById<EditText>(R.id.etLatitud)
-        val etLongitud = view.findViewById<EditText>(R.id.etLongitud)
+        val etLugar = view.findViewById<EditText>(R.id.etLugar)
         val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
@@ -39,24 +39,29 @@ class AgregarNovelaFragment : Fragment() {
             val autor = etAutor.text.toString()
             val anio = etAnio.text.toString().toIntOrNull()
             val sinopsis = etSinopsis.text.toString()
-            val latitud = etLatitud.text.toString().toDoubleOrNull()
-            val longitud = etLongitud.text.toString().toDoubleOrNull()
+            val lugar = etLugar.text.toString()
 
-            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank()) {
-                val nuevaNovela = Novela(
-                    titulo = titulo,
-                    autor = autor,
-                    anioPublicacion = anio,
-                    sinopsis = sinopsis,
-                    latitud = latitud,
-                    longitud = longitud
-                )
-
+            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && lugar.isNotBlank()) {
                 GlobalScope.launch(Dispatchers.IO) {
-                    novelaDao.agregarNovela(nuevaNovela)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Novela agregada exitosamente", Toast.LENGTH_SHORT).show()
-                        parentFragmentManager.popBackStack()
+                    val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(requireContext(), lugar)
+                    if (coordenadas != null) {
+                        val nuevaNovela = Novela(
+                            titulo = titulo,
+                            autor = autor,
+                            anioPublicacion = anio,
+                            sinopsis = sinopsis,
+                            latitud = coordenadas.first,
+                            longitud = coordenadas.second
+                        )
+                        novelaDao.agregarNovela(nuevaNovela)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(requireContext(), "Novela agregada exitosamente", Toast.LENGTH_SHORT).show()
+                            parentFragmentManager.popBackStack()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(requireContext(), "Lugar no encontrado", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } else {

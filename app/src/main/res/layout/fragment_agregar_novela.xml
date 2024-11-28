@@ -38,19 +38,10 @@
         android:minHeight="48dp" />
 
     <EditText
-        android:id="@+id/etLatitud"
+        android:id="@+id/etLugar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Latitud"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp" />
-
-    <EditText
-        android:id="@+id/etLongitud"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Longitud"
-        android:inputType="numberDecimal"
+        android:hint="Lugar (ej: Madrid, Londres)"
         android:minHeight="48dp" />
 
     <Button

@@ -48,19 +48,15 @@ class MapaActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        // Cargar y mostrar las novelas con ubicaciones
         GlobalScope.launch(Dispatchers.IO) {
             val novelas = novelaDao.obtenerNovelas()
+            val groupedNovelas = novelas.groupBy { Pair(it.latitud, it.longitud) }
+
             withContext(Dispatchers.Main) {
-                novelas.forEach { novela ->
-                    if (novela.latitud != null && novela.longitud != null) {
-                        val location = LatLng(novela.latitud, novela.longitud)
-                        mMap.addMarker(MarkerOptions().position(location).title(novela.titulo))
-                    }
-                }
-                // Centrar el mapa en un punto arbitrario (ej. la primera novela con ubicación)
-                novelas.firstOrNull { it.latitud != null && it.longitud != null }?.let {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitud!!, it.longitud!!), 10f))
+                groupedNovelas.forEach { (coords, novelas) ->
+                    val location = LatLng(coords.first!!, coords.second!!)
+                    val markerTitle = novelas.joinToString(", ") { it.titulo }
+                    mMap.addMarker(MarkerOptions().position(location).title(markerTitle))
                 }
             }
         }
