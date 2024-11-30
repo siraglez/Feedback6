@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 import com.example.feedback6.actividades.MapaActivity
 import com.example.feedback6.adapters.NovelaAdapter
-import com.example.feedback6.baseDeDatos.DatabaseProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 import com.example.feedback6.dataClasses.Novela
-import com.example.feedback6.baseDeDatos.DatabaseProvider
 import com.example.feedback6.utils.GeocodingUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

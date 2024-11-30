@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.example.feedback6.R
-import com.example.feedback6.baseDeDatos.DatabaseProvider
 import kotlinx.coroutines.runBlocking
 
 class NovelasFavoritasWidgetService : RemoteViewsService() {

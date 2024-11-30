@@ -8,32 +8,30 @@ import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.feedback6.R
-import com.example.feedback6.baseDeDatos.DatabaseProvider
-import com.example.feedback6.dao.UsuarioDao
+import com.example.feedback6.baseDeDatos.UsuarioDatabaseHelper
 import com.example.feedback6.dataClasses.Usuario
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.io.IOException
 
 class ConfiguracionActivity : AppCompatActivity() {
 
-    private lateinit var usuarioDao: UsuarioDao
+    private lateinit var usuarioDbHelper: UsuarioDatabaseHelper
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences("UsuarioPreferences", MODE_PRIVATE)
 
-        //Aplicar el tema al iniciar la actividad
+        // Aplicar el tema al iniciar la actividad
         aplicarTema()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuracion)
 
-        usuarioDao = DatabaseProvider.getDatabase(this).usuarioDao()
+        usuarioDbHelper = UsuarioDatabaseHelper(this)
 
         val switchTemaOscuro = findViewById<Switch>(R.id.switchTemaOscuro)
         val btnBackup = findViewById<Button>(R.id.btnBackup)
@@ -41,7 +39,7 @@ class ConfiguracionActivity : AppCompatActivity() {
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarSesion)
 
-        //Configurar el switch con la preferencia guardada
+        // Configurar el switch con la preferencia guardada
         val temaOscuroActivado = sharedPreferences.getBoolean("temaOscuro", false)
         switchTemaOscuro.isChecked = temaOscuroActivado
 
@@ -58,7 +56,7 @@ class ConfiguracionActivity : AppCompatActivity() {
             realizarCopiaDeSeguridad()
         }
 
-        //Configurar botón de restaurar datos
+        // Configurar botón de restaurar datos
         btnRestore.setOnClickListener {
             restaurarDatos()
         }
@@ -68,7 +66,7 @@ class ConfiguracionActivity : AppCompatActivity() {
             finish()  // Simplemente termina la actividad para volver a MainActivity
         }
 
-        //Configurar el botón para cerrar sesión
+        // Configurar el botón para cerrar sesión
         btnCerrarSesion.setOnClickListener {
             cerrarSesion()
         }
@@ -80,48 +78,49 @@ class ConfiguracionActivity : AppCompatActivity() {
     }
 
     private fun realizarCopiaDeSeguridad() {
-        GlobalScope.launch(Dispatchers.IO) {
-            val usuarios = usuarioDao.obtenerUsuarios()
-            val backupFile = File(getExternalFilesDir(null), "usuarios_backup.json")
-            try {
-                val usuariosJson = Gson().toJson(usuarios)
-                backupFile.writeText(usuariosJson)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConfiguracionActivity, "Copia de seguridad realizada en: ${backupFile.absolutePath}", Toast.LENGTH_LONG).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConfiguracionActivity, "Error al realizar la copia de seguridad: ${e.message}", Toast.LENGTH_LONG).show()
-                }
+        // Guardar un archivo de copia de seguridad con la información de los usuarios en formato JSON usando Gson
+        val usuarios = usuarioDbHelper.obtenerUsuarios()
+        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.json")
+
+        try {
+            val gson = Gson()
+            val json = gson.toJson(usuarios)
+            FileWriter(backupFile).use { writer ->
+                writer.write(json)
             }
+            Toast.makeText(this, "Copia de seguridad realizada en: ${backupFile.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(this, "Error al realizar la copia de seguridad: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun restaurarDatos() {
-        val backupFile = File(getExternalFilesDir(null), "usuarios_backup.json")
+        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.json")
+
         if (!backupFile.exists()) {
             Toast.makeText(this, "No se encontró ninguna copia de seguridad.", Toast.LENGTH_LONG).show()
             return
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val usuariosJson = backupFile.readText()
-                val usuarios: List<Usuario> = Gson().fromJson(usuariosJson, object : TypeToken<List<Usuario>>() {}.type)
-                usuarios.forEach { usuarioDao.agregarUsuario(it) }
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConfiguracionActivity, "Datos restaurados exitosamente.", Toast.LENGTH_LONG).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ConfiguracionActivity, "Error al restaurar los datos: ${e.message}", Toast.LENGTH_LONG).show()
-                }
+        try {
+            val gson = Gson()
+            val usuarios = FileReader(backupFile).use { reader ->
+                gson.fromJson<List<Usuario>>(reader, object : TypeToken<List<Usuario>>() {}.type)
             }
+
+            // Agregar los usuarios a la base de datos
+            usuarios.forEach { usuario ->
+                usuarioDbHelper.agregarUsuarioSiNoExiste(usuario)
+            }
+
+            Toast.makeText(this, "Datos restaurados exitosamente desde la copia de seguridad.", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error al restaurar los datos: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun cerrarSesion() {
-        // Borrar las preferecias del usuario para cerrar sesión
+        // Borrar las preferencias del usuario para cerrar sesión
         sharedPreferences.edit().clear().apply()
         // Redirigir a la pantalla de login
         val intent = Intent(this, LoginActivity::class.java)

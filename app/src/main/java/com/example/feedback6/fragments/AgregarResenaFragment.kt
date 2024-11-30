@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 import com.example.feedback6.dataClasses.Resena
-import com.example.feedback6.baseDeDatos.DatabaseProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
