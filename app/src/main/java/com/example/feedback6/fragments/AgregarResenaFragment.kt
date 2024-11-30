@@ -1,7 +1,6 @@
 package com.example.feedback6.fragments
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
+import com.example.feedback6.baseDeDatos.ResenaDatabaseHelper
 import com.example.feedback6.dataClasses.Resena
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,12 +19,10 @@ import kotlinx.coroutines.withContext
 
 class AgregarResenaFragment : Fragment() {
     private lateinit var tituloNovela: String
-    private lateinit var sharedPreferences: SharedPreferences
-    private val resenaDao by lazy { DatabaseProvider.getDatabase(requireContext()).resenaDao() }
+    private val resenaDbHelper by lazy { ResenaDatabaseHelper(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("UsuarioPreferences", Context.MODE_PRIVATE)
 
         arguments?.let {
             tituloNovela = it.getString("tituloNovela", "")
@@ -42,7 +40,7 @@ class AgregarResenaFragment : Fragment() {
             if (resenaTexto.isNotBlank()) {
                 GlobalScope.launch(Dispatchers.IO) {
                     val resena = Resena(tituloNovela = tituloNovela, resena = resenaTexto)
-                    resenaDao.agregarResena(resena)
+                    resenaDbHelper.agregarResena(resena)
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "Reseña agregada exitosamente", Toast.LENGTH_SHORT).show()
