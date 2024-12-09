@@ -18,15 +18,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AgregarNovelaFragment : Fragment() {
-    private lateinit var novelaDbHelper: NovelaDatabaseHelper
+
+    private val novelaDbHelper by lazy { NovelaDatabaseHelper(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_agregar_novela, container, false)
-
-        novelaDbHelper = NovelaDatabaseHelper(requireContext())
 
         val etTitulo = view.findViewById<EditText>(R.id.etTitulo)
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
@@ -52,6 +51,7 @@ class AgregarNovelaFragment : Fragment() {
                             autor = autor,
                             anioPublicacion = anio,
                             sinopsis = sinopsis,
+                            esFavorita = false,
                             ubicacion = ubicacion
                         )
                         novelaDbHelper.agregarNovela(nuevaNovela)
