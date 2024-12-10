@@ -1,5 +1,6 @@
 package com.example.feedback6.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class DetallesNovelaFragment : Fragment() {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_detalles_novela, container, false)
 
@@ -40,6 +42,7 @@ class DetallesNovelaFragment : Fragment() {
         view.findViewById<TextView>(R.id.tvAutor).text = novela.autor
         view.findViewById<TextView>(R.id.tvAnio).text = novela.anioPublicacion.toString()
         view.findViewById<TextView>(R.id.tvSinopsis).text = novela.sinopsis
+        view.findViewById<TextView>(R.id.tvUbicacion).text = novela.ubicacion
 
         val listViewResenas = view.findViewById<ListView>(R.id.listViewResenas)
 

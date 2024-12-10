@@ -51,19 +51,35 @@ class MapaActivity : AppCompatActivity() {
     }
 
     private fun cargarNovelasEnMapa() {
-        val novelas = novelaDbHelper.obtenerNovelas()
+        val novelas = novelaDbHelper.obtenerNovelas() // Obtén las novelas desde la base de datos
+
         novelas.forEach { novela ->
-            val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(this, novela.ubicacion)
-            if (coordenadas != null) {
-                val marker = Marker(mapView)
-                marker.position = coordenadas
-                marker.title = novela.titulo
-                marker.snippet = "Autor: ${novela.autor}"
-                mapView.overlays.add(marker)
+            if (!novela.ubicacion.isNullOrBlank()) { // Verifica que la ubicación no esté vacía o nula
+                val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(this, novela.ubicacion)
+
+                if (coordenadas != null) {
+                    val geoPoint = GeoPoint(coordenadas.latitude, coordenadas.longitude)
+                    val marker = Marker(mapView)
+                    marker.position = geoPoint
+                    marker.title = novela.titulo
+                    marker.snippet = "Autor: ${novela.autor}\nUbicación: ${novela.ubicacion}"
+                    mapView.overlays.add(marker)
+                } else {
+                    Toast.makeText(
+                        this,
+                        "No se pudo obtener la ubicación para: ${novela.titulo}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
-                Log.w("MapaActivity", "No se pudieron obtener coordenadas para la novela: ${novela.titulo} con ubicación: ${novela.ubicacion}")
+                Toast.makeText(
+                    this,
+                    "Ubicación no válida para: ${novela.titulo}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+        mapView.invalidate() // Refresca el mapa
     }
 
     private fun verificarPermisosUbicacion() {

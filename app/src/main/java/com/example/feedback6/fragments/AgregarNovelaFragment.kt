@@ -36,21 +36,17 @@ class AgregarNovelaFragment : Fragment() {
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
         btnAgregar.setOnClickListener {
-            val titulo = etTitulo.text.toString()
-            val autor = etAutor.text.toString()
-            val anio = etAnio.text.toString().toIntOrNull()
-            val sinopsis = etSinopsis.text.toString()
             val ubicacion = etUbicacion.text.toString()
 
-            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && ubicacion.isNotBlank()) {
+            if (ubicacion.isNotBlank()) {
                 GlobalScope.launch(Dispatchers.IO) {
                     val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(requireContext(), ubicacion)
                     if (coordenadas != null) {
                         val nuevaNovela = Novela(
-                            titulo = titulo,
-                            autor = autor,
-                            anioPublicacion = anio,
-                            sinopsis = sinopsis,
+                            titulo = etTitulo.text.toString(),
+                            autor = etAutor.text.toString(),
+                            anioPublicacion = etAnio.text.toString().toInt(),
+                            sinopsis = etSinopsis.text.toString(),
                             ubicacion = ubicacion
                         )
                         novelaDbHelper.agregarNovela(nuevaNovela)
@@ -60,12 +56,12 @@ class AgregarNovelaFragment : Fragment() {
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "Lugar no encontrado, por favor revisa la dirección", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Dirección no válida", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Por favor completa la ubicación", Toast.LENGTH_SHORT).show()
             }
         }
 

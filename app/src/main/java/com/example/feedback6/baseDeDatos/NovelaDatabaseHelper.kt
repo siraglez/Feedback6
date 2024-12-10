@@ -17,6 +17,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         private const val COLUMN_ANIO_PUBLICACION = "anioPublicacion"
         private const val COLUMN_SINOPSIS = "sinopsis"
         private const val COLUMN_ES_FAVORITA = "esFavorita"
+        private const val COLUMN_UBICACION = "ubicacion"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -27,7 +28,8 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     "$COLUMN_AUTOR TEXT, " +
                     "$COLUMN_ANIO_PUBLICACION INTEGER, " +
                     "$COLUMN_SINOPSIS TEXT, " +
-                    "$COLUMN_ES_FAVORITA INTEGER)"
+                    "$COLUMN_ES_FAVORITA INTEGER, " +
+                    "$COLUMN_UBICACION TEXT)"
         )
     }
 
@@ -44,6 +46,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             put(COLUMN_ANIO_PUBLICACION, novela.anioPublicacion)
             put(COLUMN_SINOPSIS, novela.sinopsis)
             put(COLUMN_ES_FAVORITA, if (novela.esFavorita) 1 else 0)
+            put(COLUMN_UBICACION, novela.ubicacion)
         }
         val result = db.insert(TABLE_NOVELAS, null, values)
         db.close()
@@ -70,7 +73,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     anioPublicacion = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ANIO_PUBLICACION)),
                     sinopsis = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SINOPSIS)),
                     esFavorita = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ES_FAVORITA)) == 1,
-                    ubicacion = "" // Agrega soporte si decides usar ubicación
+                    ubicacion = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UBICACION))
                 )
                 novelas.add(novela)
             } while (cursor.moveToNext())
@@ -103,7 +106,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     anioPublicacion = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ANIO_PUBLICACION)),
                     sinopsis = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SINOPSIS)),
                     esFavorita = true,
-                    ubicacion = ""
+                    ubicacion = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UBICACION))
                 )
                 novelasFavoritas.add(novela)
             } while (cursor.moveToNext())

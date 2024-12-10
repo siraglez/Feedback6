@@ -1,33 +1,26 @@
 package com.example.feedback6.utils
 
 import android.content.Context
-import android.location.Geocoder
-import android.util.Log
-import org.osmdroid.util.GeoPoint
-import java.io.IOException
 
 object GeocodingUtils {
-    fun obtenerCoordenadasDesdeDireccion(context: Context, direccion: String): GeoPoint? {
-        if (direccion.isBlank()) {
-            Log.e("GeocodingUtils", "Dirección vacía o inválida.")
+    fun obtenerCoordenadasDesdeDireccion(context: Context, direccion: String?): android.location.Address? {
+        if (direccion.isNullOrBlank()) {
+            android.util.Log.e("GeocodingUtils", "Dirección vacía o inválida.")
             return null
         }
+
         return try {
-            val geocoder = Geocoder(context)
-            val addresses = geocoder.getFromLocationName(direccion, 1)
-            if (addresses.isNullOrEmpty()) {
-                Log.e("GeocodingUtils", "No se encontraron resultados para la dirección: $direccion")
-                null
+            val geocoder = android.location.Geocoder(context)
+            val resultados = geocoder.getFromLocationName(direccion, 1)
+            if (resultados!!.isNotEmpty()) {
+                resultados[0] // Devuelve la primera coincidencia encontrada
             } else {
-                val location = addresses[0]
-                GeoPoint(location.latitude, location.longitude)
+                null
             }
-        } catch (e: IOException) {
-            Log.e("GeocodingUtils", "Error al obtener coordenadas para la dirección: $direccion", e)
-            null
-        } catch (e: IllegalArgumentException) {
-            Log.e("GeocodingUtils", "Dirección inválida: $direccion", e)
+        } catch (e: Exception) {
+            android.util.Log.e("GeocodingUtils", "Error al convertir dirección: ${e.message}", e)
             null
         }
     }
 }
+
