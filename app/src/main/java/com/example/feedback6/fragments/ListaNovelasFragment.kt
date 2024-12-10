@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
+import com.example.feedback6.actividades.MainActivity
 import com.example.feedback6.actividades.MapaActivity
 import com.example.feedback6.adapters.NovelaAdapter
 import com.example.feedback6.baseDeDatos.NovelaDatabaseHelper
@@ -58,7 +59,7 @@ class ListaNovelasFragment : Fragment() {
         }
 
         btnAgregarNovela.setOnClickListener {
-            (activity as? com.example.feedback6.actividades.MainActivity)?.mostrarAgregarNovelaFragment()
+            (activity as? MainActivity)?.mostrarAgregarNovelaFragment()
         }
 
         btnVerMapa.setOnClickListener {

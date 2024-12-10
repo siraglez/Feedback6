@@ -40,7 +40,6 @@ class MapaActivity : AppCompatActivity() {
         val mapController: IMapController = mapView.controller
         mapController.setZoom(15.0)
 
-        // Inicializar LocationManager
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         cargarNovelasEnMapa()
@@ -79,7 +78,6 @@ class MapaActivity : AppCompatActivity() {
     }
 
     private fun mostrarUbicacionActual() {
-        // Verificar permisos nuevamente
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -87,7 +85,6 @@ class MapaActivity : AppCompatActivity() {
             return
         }
 
-        // Obtener la última ubicación conocida
         val lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         if (lastKnownLocation != null) {
             actualizarMapaConUbicacion(lastKnownLocation)
@@ -95,7 +92,6 @@ class MapaActivity : AppCompatActivity() {
             Toast.makeText(this, "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show()
         }
 
-        // Registrar listener para actualizaciones de ubicación
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
             LOCATION_UPDATE_INTERVAL,
@@ -119,11 +115,7 @@ class MapaActivity : AppCompatActivity() {
         Toast.makeText(this, "Ubicación actualizada: (${location.latitude}, ${location.longitude})", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION_PERMISSION && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             mostrarUbicacionActual()
