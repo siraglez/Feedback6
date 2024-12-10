@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), ListaNovelasFragment.OnNovelaSelectedL
                 .commit()
         }
 
-        // Configuración del botón de configuración para abrir ConfiguracionActivity
+        // Botón de configuración para abrir ConfiguracionActivity
         val btnConfiguracion = findViewById<Button>(R.id.btnConfiguracion)
         btnConfiguracion.setOnClickListener {
             val intent = Intent(this, ConfiguracionActivity::class.java)

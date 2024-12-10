@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 import com.example.feedback6.actividades.MainActivity
@@ -63,9 +64,15 @@ class ListaNovelasFragment : Fragment() {
         }
 
         btnVerMapa.setOnClickListener {
-            val intent = Intent(activity, MapaActivity::class.java)
-            startActivity(intent)
+            try {
+                val intent = Intent(activity, MapaActivity::class.java)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error al abrir el mapa: ${e.message}", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
         }
+
 
         return view
     }

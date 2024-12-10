@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -55,10 +56,12 @@ class MapaActivity : AppCompatActivity() {
             val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(this, novela.ubicacion)
             if (coordenadas != null) {
                 val marker = Marker(mapView)
-                marker.position = GeoPoint(coordenadas.latitude, coordenadas.longitude)
+                marker.position = coordenadas
                 marker.title = novela.titulo
                 marker.snippet = "Autor: ${novela.autor}"
                 mapView.overlays.add(marker)
+            } else {
+                Log.w("MapaActivity", "No se pudieron obtener coordenadas para la novela: ${novela.titulo} con ubicación: ${novela.ubicacion}")
             }
         }
     }

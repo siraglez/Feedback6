@@ -51,7 +51,6 @@ class AgregarNovelaFragment : Fragment() {
                             autor = autor,
                             anioPublicacion = anio,
                             sinopsis = sinopsis,
-                            esFavorita = false,
                             ubicacion = ubicacion
                         )
                         novelaDbHelper.agregarNovela(nuevaNovela)
@@ -61,7 +60,7 @@ class AgregarNovelaFragment : Fragment() {
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "Lugar no encontrado", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Lugar no encontrado, por favor revisa la dirección", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
