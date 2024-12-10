@@ -57,6 +57,7 @@ class AgregarNovelaFragment : Fragment() {
                     } else {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(requireContext(), "Dirección no válida", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Por favor, ingresa una dirección válida (ej: Calle, Ciudad, País).", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
