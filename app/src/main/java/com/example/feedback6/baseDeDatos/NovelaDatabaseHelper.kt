@@ -24,8 +24,8 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     "autor TEXT, " +
                     "anioPublicacion INTEGER, " +
                     "sinopsis TEXT, " +
-                    "$COLUMN_RESENA TEXT, " +
                     "ubicacion TEXT, " +
+                    "$COLUMN_RESENA TEXT, " +
                     "esFavorita INTEGER)"
         )
 
@@ -40,7 +40,6 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 4) {
             db.execSQL("DROP TABLE IF EXISTS $TABLE_NOVELAS")
-            db.execSQL("ALTER TABLE $TABLE_NOVELAS ADD COLUMN ubicacion TEXT")
             db.execSQL("DROP TABLE IF EXISTS $TABLE_RESENAS")
             onCreate(db)
         }
@@ -54,8 +53,8 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             put("autor", novela.autor)
             put("anioPublicacion", novela.anioPublicacion)
             put("sinopsis", novela.sinopsis)
-            put("ubicacion", novela.ubicacion)
             put("esFavorita", if (novela.esFavorita) 1 else 0)
+            put("ubicacion", novela.ubicacion)
         }
         db.insert(TABLE_NOVELAS, null, values)
         db.close()
@@ -82,7 +81,9 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     cursor.getString(cursor.getColumnIndexOrThrow("autor")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("anioPublicacion")),
                     cursor.getString(cursor.getColumnIndexOrThrow("sinopsis")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("esFavorita")) == 1
+                cursor.getInt(cursor.getColumnIndexOrThrow("esFavorita")) == 1,
+                    cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"))
+
                 )
                 novelas.add(novela)
             } while (cursor.moveToNext())
