@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,24 +9,35 @@
         android:id="@+id/spinnerNovelas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:minHeight="48dp" />
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/editTextUbicacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Introduce una ubicación"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnBuscarUbicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar ubicación"
+        android:layout_marginBottom="16dp" />
 
     <ImageView
         android:id="@+id/imageViewMapa"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scaleType="centerCrop"
-        android:contentDescription="@string/mapa_estatico" />
+        android:contentDescription="Mapa estático"
+        android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/btnVolver"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnVolverLista"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="Volver"
-        android:textColor="@color/textColor"
-        android:backgroundTint="@color/colorPrimaryDark"/>
+        android:text="Volver a la lista de novelas" />
 
 </LinearLayout>

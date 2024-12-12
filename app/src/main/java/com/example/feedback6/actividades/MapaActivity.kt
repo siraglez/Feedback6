@@ -1,14 +1,8 @@
 package com.example.feedback6.actividades
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.feedback6.R
 import com.example.feedback6.baseDeDatos.NovelaDatabaseHelper
@@ -16,66 +10,88 @@ import com.squareup.picasso.Picasso
 
 class MapaActivity : AppCompatActivity() {
 
-    private lateinit var spinnerNovelas: Spinner
-    private lateinit var imageViewMapa: ImageView
     private lateinit var novelaDbHelper: NovelaDatabaseHelper
+    private lateinit var imageViewMapa: ImageView
+    private lateinit var spinnerNovelas: Spinner
+    private lateinit var editTextUbicacion: EditText
+    private lateinit var btnBuscarUbicacion: Button
+    private lateinit var btnVolverLista: Button
+    private lateinit var urlMapaBase: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mapa)
 
-        // Inicializar la base de datos y las vistas
+        // Inicializa la URL base desde strings.xml
+        urlMapaBase = getString(R.string.mapa_estatico)
+
         novelaDbHelper = NovelaDatabaseHelper(this)
-        spinnerNovelas = findViewById(R.id.spinnerNovelas)
         imageViewMapa = findViewById(R.id.imageViewMapa)
+        spinnerNovelas = findViewById(R.id.spinnerNovelas)
+        editTextUbicacion = findViewById(R.id.editTextUbicacion)
+        btnBuscarUbicacion = findViewById(R.id.btnBuscarUbicacion)
+        btnVolverLista = findViewById(R.id.btnVolverLista)
 
-        // Configurar el Spinner con las novelas
-        configurarSpinnerNovelas()
-
-        // Configurar el Botón para volver a la pantalla principal
-        val btnVolver = findViewById<Button>(R.id.btnVolver)
-        btnVolver.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
+        configurarSpinner()
+        configurarBotonBuscar()
+        configurarBotonVolver()
     }
 
-    private fun configurarSpinnerNovelas() {
+    private fun configurarSpinner() {
         val novelas = novelaDbHelper.obtenerNovelas()
-        if (novelas.isEmpty()) {
-            Toast.makeText(this, "No hay novelas disponibles.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val titulosNovelas = novelas.map { it.titulo }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, novelas.map { it.titulo })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerNovelas.adapter = adapter
+        if (titulosNovelas.isEmpty()) {
+            Toast.makeText(this, "No hay novelas guardadas", Toast.LENGTH_SHORT).show()
+        } else {
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, titulosNovelas)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerNovelas.adapter = adapter
 
-        spinnerNovelas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val tituloSeleccionado = parent.getItemAtPosition(position) as String
-                val novelaSeleccionada = novelas.find { it.titulo == tituloSeleccionado }
+            spinnerNovelas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val tituloSeleccionado = titulosNovelas[position]
+                    val novela = novelas.find { it.titulo == tituloSeleccionado }
+                    novela?.let {
+                        mostrarMapa(it.ubicacion)
+                    }
+                }
 
-                if (novelaSeleccionada != null) {
-                    mostrarMapa(novelaSeleccionada)
-                } else {
-                    Toast.makeText(this@MapaActivity, "No se encontró la novela seleccionada.", Toast.LENGTH_SHORT).show()
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // No hacer nada
                 }
             }
+        }
+    }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // No hacer nada si no se selecciona ningún elemento
+    private fun configurarBotonBuscar() {
+        btnBuscarUbicacion.setOnClickListener {
+            val ubicacion = editTextUbicacion.text.toString()
+            if (ubicacion.isNotBlank()) {
+                mostrarMapa(ubicacion)
+            } else {
+                Toast.makeText(this, "Introduce una ubicación válida", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun mostrarMapa(novela: com.example.feedback6.dataClasses.Novela) {
-        val urlMapa = getString(R.string.mapa_estatico)
+    private fun configurarBotonVolver() {
+        btnVolverLista.setOnClickListener {
+            finish() // Finaliza la actividad y regresa a la anterior
+        }
+    }
 
+    private fun mostrarMapa(ubicacion: String) {
+        // Muestra siempre el mapa base.
         Picasso.get()
-            .load(urlMapa)
-            .placeholder(R.drawable.mapa_placeholder) // Imagen por defecto mientras carga
-            .error(R.drawable.mapa_error) // Imagen en caso de error
+            .load(urlMapaBase)
+            .placeholder(R.drawable.mapa_placeholder)
+            .error(R.drawable.mapa_error)
             .into(imageViewMapa)
     }
 }
