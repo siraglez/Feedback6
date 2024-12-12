@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,35 +10,22 @@
         android:id="@+id/spinnerNovelas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
-
-    <EditText
-        android:id="@+id/editTextUbicacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Introduce una ubicación"
-        android:layout_marginBottom="8dp" />
-
-    <Button
-        android:id="@+id/btnBuscarUbicacion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Buscar ubicación"
-        android:layout_marginBottom="16dp" />
+        android:minHeight="48dp"
+        android:spinnerMode="dropdown" />
 
     <ImageView
-        android:id="@+id/imageViewMapa"
+        android:id="@+id/mapImageView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="300dp"
         android:scaleType="centerCrop"
-        android:contentDescription="Mapa estático"
-        android:layout_marginBottom="16dp" />
+        android:contentDescription="@string/mapa_estatico" />
 
     <Button
-        android:id="@+id/btnVolverLista"
+        android:id="@+id/btnVolver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volver a la lista de novelas" />
+        android:text="Volver"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/textColor"/>
 
 </LinearLayout>

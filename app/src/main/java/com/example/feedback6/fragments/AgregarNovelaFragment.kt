@@ -9,23 +9,22 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
-import com.example.feedback6.baseDeDatos.NovelaDatabaseHelper
 import com.example.feedback6.dataClasses.Novela
-import com.example.feedback6.utils.GeocodingUtils
+import com.example.feedback6.baseDeDatos.NovelaDatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AgregarNovelaFragment : Fragment() {
-
-    private val novelaDbHelper by lazy { NovelaDatabaseHelper(requireContext()) }
+    private lateinit var novelaDbHelper: NovelaDatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_agregar_novela, container, false)
+        novelaDbHelper = NovelaDatabaseHelper(requireContext())
 
         val etTitulo = view.findViewById<EditText>(R.id.etTitulo)
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
@@ -36,33 +35,29 @@ class AgregarNovelaFragment : Fragment() {
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
         btnAgregar.setOnClickListener {
+            val titulo = etTitulo.text.toString()
+            val autor = etAutor.text.toString()
+            val anio = etAnio.text.toString().toIntOrNull()
+            val sinopsis = etSinopsis.text.toString()
             val ubicacion = etUbicacion.text.toString()
 
-            if (ubicacion.isNotBlank()) {
+            if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && ubicacion.isNotBlank()) {
                 GlobalScope.launch(Dispatchers.IO) {
-                    val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(requireContext(), ubicacion)
-                    if (coordenadas != null) {
-                        val nuevaNovela = Novela(
-                            titulo = etTitulo.text.toString(),
-                            autor = etAutor.text.toString(),
-                            anioPublicacion = etAnio.text.toString().toInt(),
-                            sinopsis = etSinopsis.text.toString(),
-                            ubicacion = ubicacion
-                        )
-                        novelaDbHelper.agregarNovela(nuevaNovela)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "Novela agregada exitosamente", Toast.LENGTH_SHORT).show()
-                            parentFragmentManager.popBackStack()
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(requireContext(), "Dirección no válida", Toast.LENGTH_SHORT).show()
-                            Toast.makeText(context, "Por favor, ingresa una dirección válida (ej: Calle, Ciudad, País).", Toast.LENGTH_SHORT).show()
-                        }
+                    val nuevaNovela = Novela(
+                        titulo = titulo,
+                        autor = autor,
+                        anioPublicacion = anio,
+                        sinopsis = sinopsis,
+                        ubicacion = ubicacion
+                    )
+                    novelaDbHelper.agregarNovela(nuevaNovela)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "Novela agregada exitosamente", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.popBackStack()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Por favor completa la ubicación", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
 
