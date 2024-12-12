@@ -10,12 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.feedback6.R
 import com.example.feedback6.baseDeDatos.UsuarioDatabaseHelper
 import com.example.feedback6.dataClasses.Usuario
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
-import java.io.IOException
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 
 class ConfiguracionActivity : AppCompatActivity() {
 
@@ -25,7 +22,7 @@ class ConfiguracionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences("UsuarioPreferences", MODE_PRIVATE)
 
-        // Aplicar el tema al iniciar la actividad
+        //Aplicar el tema al iniciar la actividad
         aplicarTema()
 
         super.onCreate(savedInstanceState)
@@ -39,7 +36,7 @@ class ConfiguracionActivity : AppCompatActivity() {
         val btnVolver = findViewById<Button>(R.id.btnVolver)
         val btnCerrarSesion = findViewById<Button>(R.id.btnCerrarSesion)
 
-        // Configurar el switch con la preferencia guardada
+        //Configurar el switch con la preferencia guardada
         val temaOscuroActivado = sharedPreferences.getBoolean("temaOscuro", false)
         switchTemaOscuro.isChecked = temaOscuroActivado
 
@@ -56,7 +53,7 @@ class ConfiguracionActivity : AppCompatActivity() {
             realizarCopiaDeSeguridad()
         }
 
-        // Configurar botón de restaurar datos
+        //Configurar botón de restaurar datos
         btnRestore.setOnClickListener {
             restaurarDatos()
         }
@@ -66,7 +63,7 @@ class ConfiguracionActivity : AppCompatActivity() {
             finish()  // Simplemente termina la actividad para volver a MainActivity
         }
 
-        // Configurar el botón para cerrar sesión
+        //Configurar el botón para cerrar sesión
         btnCerrarSesion.setOnClickListener {
             cerrarSesion()
         }
@@ -78,24 +75,26 @@ class ConfiguracionActivity : AppCompatActivity() {
     }
 
     private fun realizarCopiaDeSeguridad() {
-        // Guardar un archivo de copia de seguridad con la información de los usuarios en formato JSON usando Gson
+        // Guardar un archivo de copia de seguridad con la información de los usuarios
         val usuarios = usuarioDbHelper.obtenerUsuarios()
-        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.json")
+        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.txt")
 
         try {
-            val gson = Gson()
-            val json = gson.toJson(usuarios)
-            FileWriter(backupFile).use { writer ->
-                writer.write(json)
+            FileOutputStream(backupFile).use { fos ->
+                OutputStreamWriter(fos).use { writer ->
+                    usuarios.forEach { usuario ->
+                        writer.write("Email: ${usuario.email}, Password: ${usuario.password}, Tema Oscuro: ${usuario.temaOscuro}\n")
+                    }
+                }
             }
             Toast.makeText(this, "Copia de seguridad realizada en: ${backupFile.absolutePath}", Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Toast.makeText(this, "Error al realizar la copia de seguridad: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun restaurarDatos() {
-        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.json")
+        val backupFile = File(getExternalFilesDir(null), "copia_de_seguridad_usuarios.txt")
 
         if (!backupFile.exists()) {
             Toast.makeText(this, "No se encontró ninguna copia de seguridad.", Toast.LENGTH_LONG).show()
@@ -103,16 +102,19 @@ class ConfiguracionActivity : AppCompatActivity() {
         }
 
         try {
-            val gson = Gson()
-            val usuarios = FileReader(backupFile).use { reader ->
-                gson.fromJson<List<Usuario>>(reader, object : TypeToken<List<Usuario>>() {}.type)
-            }
+            backupFile.bufferedReader().useLines { lines ->
+                lines.forEach { line ->
+                    val datos = line.split(", ")
+                    if (datos.size == 3) {
+                        val email = datos[0].substringAfter("Email: ").trim()
+                        val password = datos[1].substringAfter("Password: ").trim()
+                        val temaOscuro = datos[2].substringAfter("Tema Oscuro: ").trim().toBoolean()
 
-            // Agregar los usuarios a la base de datos
-            usuarios.forEach { usuario ->
-                usuarioDbHelper.agregarUsuarioSiNoExiste(usuario)
+                        val usuario = Usuario(email, password, temaOscuro)
+                        usuarioDbHelper.agregarUsuarioSiNoExiste(usuario)
+                    }
+                }
             }
-
             Toast.makeText(this, "Datos restaurados exitosamente desde la copia de seguridad.", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error al restaurar los datos: ${e.message}", Toast.LENGTH_LONG).show()
@@ -120,7 +122,7 @@ class ConfiguracionActivity : AppCompatActivity() {
     }
 
     private fun cerrarSesion() {
-        // Borrar las preferencias del usuario para cerrar sesión
+        // Borrar las preferecias del usuario para cerrar sesión
         sharedPreferences.edit().clear().apply()
         // Redirigir a la pantalla de login
         val intent = Intent(this, LoginActivity::class.java)

@@ -8,6 +8,5 @@ data class Novela(
     val anioPublicacion: Int,
     val sinopsis: String,
     var esFavorita: Boolean = false,
-    val resenas: MutableList<String> = mutableListOf(),
-    val ubicacion: String
+    val resenas: MutableList<String> = mutableListOf()
 ) : Serializable
