@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,28 +8,23 @@
         android:id="@+id/ivMapa"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:contentDescription="Mapa de la Comunidad de Madrid" />
+        android:src="@drawable/mapa_estatico"
+        android:scaleType="fitCenter">
+
+        <FrameLayout
+            android:id="@+id/frameMarkerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="ChildInNonViewGroup" />
+    </ImageView>
 
     <Button
-        android:id="@+id/btnVolver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Volver" />
-
-    <TextView
-        android:id="@+id/tvNovelasUbicaciones"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/btnVolver"
-        android:layout_margin="16dp"
-        android:background="@color/colorBackground"
-        android:padding="8dp"
-        android:text="Cargando novelas con ubicación..."
-        android:textColor="@color/textColor"
-        android:textSize="16sp" />
+    android:id="@+id/btnVolver"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="16dp"
+    android:text="Volver" />
 </RelativeLayout>
+

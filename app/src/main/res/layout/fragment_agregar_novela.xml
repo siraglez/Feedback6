@@ -37,12 +37,13 @@
         android:inputType="textMultiLine"
         android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/etUbicacion"
+    <ListView
+        android:id="@+id/lvUbicacion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Ubicación (Opcional)"
-        android:minHeight="48dp" />
+        android:backgroundTint="@color/colorBackground"
+        android:dividerHeight="1dp"
+        android:divider="?android:attr/listDivider" />
 
     <Button
         android:id="@+id/btnAgregar"
