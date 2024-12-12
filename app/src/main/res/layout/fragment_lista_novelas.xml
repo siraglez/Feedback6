@@ -29,5 +29,6 @@
         android:layout_height="wrap_content"
         android:text="Agregar Novela"
         android:backgroundTint="@color/colorPrimaryDark"
-        android:textColor="@color/textColor" />
+        android:textColor="@color/textColor"
+        android:layout_marginBottom="55dp"/>
 </LinearLayout>

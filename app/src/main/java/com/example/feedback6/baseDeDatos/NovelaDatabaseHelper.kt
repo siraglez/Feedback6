@@ -9,7 +9,7 @@ import com.example.feedback6.dataClasses.Novela
 class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "novelas.db"
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 4
         private const val TABLE_NOVELAS = "novelas"
         private const val TABLE_RESENAS = "resenas"
         private const val COLUMN_TITULO = "titulo"
@@ -25,7 +25,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     "anioPublicacion INTEGER, " +
                     "sinopsis TEXT, " +
                     "$COLUMN_RESENA TEXT, " +
-                    "ubicacion TEXT, " +  // Nueva columna para la ubicación
+                    "ubicacion TEXT, " +
                     "esFavorita INTEGER)"
         )
 
@@ -38,8 +38,9 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (oldVersion < 3) {
+        if (oldVersion < 4) {
             db.execSQL("DROP TABLE IF EXISTS $TABLE_NOVELAS")
+            db.execSQL("ALTER TABLE $TABLE_NOVELAS ADD COLUMN ubicacion TEXT")
             db.execSQL("DROP TABLE IF EXISTS $TABLE_RESENAS")
             onCreate(db)
         }

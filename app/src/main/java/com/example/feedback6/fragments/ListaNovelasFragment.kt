@@ -68,6 +68,11 @@ class ListaNovelasFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        actualizarListaNovelas()
+    }
+
     fun actualizarListaNovelas() {
         val novelas = novelaDbHelper.obtenerNovelas()
         adapter.clear()
