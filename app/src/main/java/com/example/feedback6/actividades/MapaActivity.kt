@@ -1,175 +1,72 @@
 package com.example.feedback6.actividades
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.example.feedback6.R
 import com.example.feedback6.baseDeDatos.NovelaDatabaseHelper
-import com.example.feedback6.dataClasses.Novela
-import com.example.feedback6.utils.GeocodingUtils
-import org.osmdroid.api.IMapController
-import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.squareup.picasso.Picasso
 
 class MapaActivity : AppCompatActivity() {
 
-    private lateinit var mapView: MapView
     private lateinit var spinnerNovelas: Spinner
-    private val novelaDbHelper by lazy { NovelaDatabaseHelper(this) }
-    private lateinit var novelas: List<Novela>
+    private lateinit var imageViewMapa: ImageView
+    private lateinit var novelaDbHelper: NovelaDatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         setContentView(R.layout.activity_mapa)
 
-        // Configuración del mapa
-        mapView = findViewById(R.id.map)
-        mapView.setTileSource(TileSourceFactory.MAPNIK)
-        mapView.setBuiltInZoomControls(true)
-        mapView.setMultiTouchControls(true)
-        val mapController: IMapController = mapView.controller
-        mapController.setZoom(15.0)
-        mapController.setCenter(GeoPoint(0.0, 0.0)) // Centro inicial
-
+        // Inicializar la base de datos y las vistas
+        novelaDbHelper = NovelaDatabaseHelper(this)
         spinnerNovelas = findViewById(R.id.spinnerNovelas)
-        cargarNovelasEnSpinner()
-        cargarNovelasEnMapa()
+        imageViewMapa = findViewById(R.id.imageViewMapa)
 
-        findViewById<Button>(R.id.btnMiUbicacion).setOnClickListener {
-            verificarPermisosUbicacion()
-        }
-
-        val btnVolver = findViewById<Button>(R.id.btnVolver)
-        btnVolver.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
+        // Configurar el Spinner con las novelas
+        configurarSpinnerNovelas()
     }
 
-    private fun cargarNovelasEnSpinner() {
-        // Obtener las novelas de la base de datos
-        novelas = novelaDbHelper.obtenerNovelas()
-
-        // Crear un adaptador para el Spinner
-        val titulosNovelas = novelas.map { it.titulo }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, titulosNovelas)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerNovelas.adapter = adapter
-
-        // Configurar listener para el Spinner
-        spinnerNovelas.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
-                val novelaSeleccionada = novelas[position]
-                moverMapaANovela(novelaSeleccionada)
-            }
-
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
-                // No hacer nada si no hay selección
-            }
-        })
-    }
-
-    private fun cargarNovelasEnMapa() {
-        GlobalScope.launch(Dispatchers.IO) {
-            novelas.forEach { novela ->
-                val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(this@MapaActivity, novela.ubicacion)
-                if (coordenadas != null) {
-                    withContext(Dispatchers.Main) {
-                        val geoPoint = GeoPoint(coordenadas.latitude, coordenadas.longitude)
-                        val marker = Marker(mapView)
-                        marker.position = geoPoint
-                        marker.title = novela.titulo
-                        marker.snippet = "Autor: ${novela.autor}\nUbicación: ${novela.ubicacion}"
-                        mapView.overlays.add(marker)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun moverMapaANovela(novela: Novela) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val coordenadas = GeocodingUtils.obtenerCoordenadasDesdeDireccion(this@MapaActivity, novela.ubicacion)
-            if (coordenadas != null) {
-                withContext(Dispatchers.Main) {
-                    val geoPoint = GeoPoint(coordenadas.latitude, coordenadas.longitude)
-                    mapView.controller.animateTo(geoPoint)
-
-                    // Añadir un marcador para la novela seleccionada
-                    val marker = Marker(mapView)
-                    marker.position = geoPoint
-                    marker.title = novela.titulo
-                    marker.snippet = "Autor: ${novela.autor}\nUbicación: ${novela.ubicacion}"
-                    mapView.overlays.add(marker)
-
-                    Toast.makeText(this@MapaActivity, "Moviendo a la novela: ${novela.titulo}", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MapaActivity, "Ubicación no válida para la novela: ${novela.titulo}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun verificarPermisosUbicacion() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else {
-            mostrarUbicacionActual()
-        }
-    }
-
-    private fun mostrarUbicacionActual() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+    private fun configurarSpinnerNovelas() {
+        val novelas = novelaDbHelper.obtenerNovelas()
+        if (novelas.isEmpty()) {
+            Toast.makeText(this, "No hay novelas disponibles.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (lastKnownLocation != null) {
-            val geoPoint = GeoPoint(lastKnownLocation.latitude, lastKnownLocation.longitude)
-            val marker = Marker(mapView)
-            marker.position = geoPoint
-            marker.title = "Mi ubicación actual"
-            mapView.overlays.add(marker)
-            mapView.controller.animateTo(geoPoint)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, novelas.map { it.titulo })
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerNovelas.adapter = adapter
+
+        spinnerNovelas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val tituloSeleccionado = parent.getItemAtPosition(position) as String
+                val novelaSeleccionada = novelas.find { it.titulo == tituloSeleccionado }
+
+                if (novelaSeleccionada != null) {
+                    mostrarMapa(novelaSeleccionada)
+                } else {
+                    Toast.makeText(this@MapaActivity, "No se encontró la novela seleccionada.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // No hacer nada si no se selecciona ningún elemento
+            }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
+    private fun mostrarMapa(novela: com.example.feedback6.dataClasses.Novela) {
+        val urlMapa = getString(R.string.mapa_estatico)
 
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDetach()
+        Picasso.get()
+            .load(urlMapa)
+            .placeholder(R.drawable.mapa_placeholder) // Imagen por defecto mientras carga
+            .error(R.drawable.mapa_error) // Imagen en caso de error
+            .into(imageViewMapa)
     }
 }

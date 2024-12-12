@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Feedback6</string>
+    <string name="mapa_estatico">https://www.openstreetmap.org/#map=10/40.4778/-4.1158</string>
 </resources>

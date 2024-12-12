@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <Spinner
         android:id="@+id/spinnerNovelas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
-        android:minHeight="48dp"
-        android:spinnerMode="dropdown" />
+        android:layout_marginBottom="16dp"
+        android:minHeight="48dp" />
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/map"
+    <ImageView
+        android:id="@+id/imageViewMapa"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/btnMiUbicacion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:text="Mi ubicación"
-        android:textColor="@color/textColor"
-        android:backgroundTint="@color/colorPrimary"/>
+        android:layout_height="400dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/mapa_estatico" />
 
     <Button
         android:id="@+id/btnVolver"
@@ -36,4 +29,5 @@
         android:text="Volver"
         android:textColor="@color/textColor"
         android:backgroundTint="@color/colorPrimaryDark"/>
-</RelativeLayout>
+
+</LinearLayout>
