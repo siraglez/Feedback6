@@ -45,6 +45,7 @@ class DetallesNovelaFragment : Fragment() {
         view.findViewById<TextView>(R.id.tvAutor).text = novela.autor
         view.findViewById<TextView>(R.id.tvAnio).text = novela.anioPublicacion.toString()
         view.findViewById<TextView>(R.id.tvSinopsis).text = novela.sinopsis
+        view.findViewById<TextView>(R.id.tvUbicacion).text = novela.ubicacion
 
         // Configuración del ListView de reseñas
         val listViewResenas = view.findViewById<ListView>(R.id.listViewResenas)
