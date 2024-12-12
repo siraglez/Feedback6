@@ -7,10 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.feedback6.R
@@ -43,17 +44,23 @@ class AgregarNovelaFragment : Fragment() {
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
         val etAnio = view.findViewById<EditText>(R.id.etAnio)
         val etSinopsis = view.findViewById<EditText>(R.id.etSinopsis)
-        val lvUbicacion = view.findViewById<ListView>(R.id.lvUbicacion)
+        val spUbicacion = view.findViewById<Spinner>(R.id.spinnerUbicacion)
         val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
-        // Configuración del ListView para elegir ubicación
-        locationAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, markers.map { it.first })
-        lvUbicacion.adapter = locationAdapter
+        // Configuración del Spinner para elegir ubicación
+        locationAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, markers.map { it.first })
+        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spUbicacion.adapter = locationAdapter
 
-        lvUbicacion.setOnItemClickListener { _, _, position, _ ->
-            val selectedLocation = markers[position].first
-            lvUbicacion.setItemChecked(position, true)
+        spUbicacion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedLocation = markers[position].first
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No se seleccionó ninguna ubicación
+            }
         }
 
         btnAgregar.setOnClickListener {
@@ -61,7 +68,7 @@ class AgregarNovelaFragment : Fragment() {
             val autor = etAutor.text.toString()
             val anio = etAnio.text.toString().toIntOrNull()
             val sinopsis = etSinopsis.text.toString()
-            val ubicacion = markers.find { lvUbicacion.isItemChecked(markers.indexOf(it)) }?.first ?: ""
+            val ubicacion = spUbicacion.selectedItem.toString()
 
             if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank() && ubicacion.isNotBlank()) {
                 val novela = Novela(titulo, autor, anio, sinopsis, false, ubicacion = ubicacion)

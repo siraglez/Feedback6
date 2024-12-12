@@ -37,13 +37,11 @@
         android:inputType="textMultiLine"
         android:minHeight="48dp" />
 
-    <ListView
-        android:id="@+id/lvUbicacion"
+    <Spinner
+        android:id="@+id/spinnerUbicacion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorBackground"
-        android:dividerHeight="1dp"
-        android:divider="?android:attr/listDivider" />
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btnAgregar"
