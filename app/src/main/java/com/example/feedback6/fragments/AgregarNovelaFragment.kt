@@ -37,6 +37,7 @@ class AgregarNovelaFragment : Fragment() {
         val etAutor = view.findViewById<EditText>(R.id.etAutor)
         val etAnio = view.findViewById<EditText>(R.id.etAnio)
         val etSinopsis = view.findViewById<EditText>(R.id.etSinopsis)
+        val etUbicacion = view.findViewById<EditText>(R.id.etUbicacion)
         val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val btnVolver = view.findViewById<Button>(R.id.btnVolver)
 
@@ -45,9 +46,10 @@ class AgregarNovelaFragment : Fragment() {
             val autor = etAutor.text.toString()
             val anio = etAnio.text.toString().toIntOrNull()
             val sinopsis = etSinopsis.text.toString()
+            val ubicacion = etUbicacion.text.toString()
 
             if (titulo.isNotBlank() && autor.isNotBlank() && anio != null && sinopsis.isNotBlank()) {
-                val novela = Novela(titulo, autor, anio, sinopsis)
+                val novela = Novela(titulo, autor, anio, sinopsis, false, ubicacion = ubicacion)
                 novelaDbHelper.agregarNovela(novela)
                 Toast.makeText(requireContext(), "Novela agregada", Toast.LENGTH_SHORT).show()
                 requireActivity().supportFragmentManager.popBackStack()

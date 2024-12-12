@@ -25,10 +25,11 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     "anioPublicacion INTEGER, " +
                     "sinopsis TEXT, " +
                     "$COLUMN_RESENA TEXT, " +
+                    "ubicacion TEXT, " +  // Nueva columna para la ubicación
                     "esFavorita INTEGER)"
         )
 
-        db.execSQL(
+    db.execSQL(
             "CREATE TABLE $TABLE_RESENAS (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "$COLUMN_TITULO TEXT, " +
@@ -52,6 +53,7 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             put("autor", novela.autor)
             put("anioPublicacion", novela.anioPublicacion)
             put("sinopsis", novela.sinopsis)
+            put("ubicacion", novela.ubicacion)
             put("esFavorita", if (novela.esFavorita) 1 else 0)
         }
         db.insert(TABLE_NOVELAS, null, values)
@@ -157,5 +159,23 @@ class NovelaDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
 
         return resenas
+    }
+
+    fun obtenerNovelasConUbicacion(): List<Pair<String, String>> {
+        val novelasConUbicacion = mutableListOf<Pair<String, String>>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT titulo, ubicacion FROM $TABLE_NOVELAS WHERE ubicacion IS NOT NULL", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val titulo = cursor.getString(cursor.getColumnIndexOrThrow("titulo"))
+                val ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"))
+                novelasConUbicacion.add(Pair(titulo, ubicacion))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return novelasConUbicacion
     }
 }

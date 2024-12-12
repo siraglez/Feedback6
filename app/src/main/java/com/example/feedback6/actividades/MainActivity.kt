@@ -50,6 +50,13 @@ class MainActivity : AppCompatActivity(), ListaNovelasFragment.OnNovelaSelectedL
             val intent = Intent(this, ConfiguracionActivity::class.java)
             startActivity(intent)
         }
+
+        // Configuración del botón de mapa para abrir MapaActivity
+        val btnMapa = findViewById<Button>(R.id.btnMapa)
+        btnMapa.setOnClickListener {
+            val intent = Intent(this, MapaActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onNovelaSelected(novela: Novela) {
