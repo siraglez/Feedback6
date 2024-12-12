@@ -1,29 +1,36 @@
 package com.example.feedback6.actividades
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.PointF
 import android.os.Bundle
-import android.widget.Button
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.feedback6.R
 
-class MapaActivity : AppCompatActivity() {
+class MapaActivity : Fragment() {
 
-    private lateinit var mapImage: Bitmap
+    private lateinit var ivMapa: ImageView
     private val markers = mutableListOf<Pair<String, PointF>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mapa)
+        loadMarkers() // Cargar ubicaciones ficticias
+    }
 
-        // Cargar la imagen del mapa
-        mapImage = BitmapFactory.decodeResource(resources, R.drawable.mapa_estatico)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_mapa, container, false)
+        ivMapa = view.findViewById(R.id.ivMapa)
+        ivMapa.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.mapa_estatico))
+        return view
+    }
 
-        // Añadir marcadores con coordenadas ficticias
+    private fun loadMarkers() {
         addMarker("Madrid", PointF(820f, 1040f))
         addMarker("Boadilla del Monte", PointF(760f, 1080f))
         addMarker("Las Rozas", PointF(740f, 950f))
@@ -37,31 +44,9 @@ class MapaActivity : AppCompatActivity() {
         addMarker("Pozuelo de Alarcón", PointF(780f, 1080f))
         addMarker("Torrejón de Ardoz", PointF(720f, 920f))
         addMarker("Sebastián de Los Reyes", PointF(710f, 940f))
-
-        // Referencia al ImageView que contiene el mapa
-        val ivMapa = findViewById<ImageView>(R.id.ivMapa)
-        ivMapa.setOnDrawListener { drawMarkersOnCanvas(it) }
-
-        // Evento para volver
-        val btnVolver = findViewById<Button>(R.id.btnVolver)
-        btnVolver.setOnClickListener { finish() }
     }
 
     private fun addMarker(name: String, point: PointF) {
         markers.add(name to point)
-    }
-
-    private fun drawMarkersOnCanvas(canvas: Canvas) {
-        val paint = Paint().apply {
-            color = android.graphics.Color.RED
-            style = Paint.Style.FILL
-            textSize = 36f // Tamaño de la letra para el nombre del marcador
-        }
-
-        // Dibujar los marcadores
-        markers.forEach { (name, point) ->
-            canvas.drawCircle(point.x, point.y, 20f, paint) // Dibuja el círculo del marcador
-            canvas.drawText(name, point.x + 25f, point.y, paint) // Dibuja el nombre del marcador
-        }
     }
 }
