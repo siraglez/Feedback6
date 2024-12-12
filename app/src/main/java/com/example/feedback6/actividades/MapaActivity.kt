@@ -1,9 +1,11 @@
 package com.example.feedback6.actividades
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
@@ -29,6 +31,13 @@ class MapaActivity : AppCompatActivity() {
 
         // Configurar el Spinner con las novelas
         configurarSpinnerNovelas()
+
+        // Configurar el Botón para volver a la pantalla principal
+        val btnVolver = findViewById<Button>(R.id.btnVolver)
+        btnVolver.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun configurarSpinnerNovelas() {
