@@ -45,7 +45,7 @@ class NovelasFavoritasRemoteViewsFactory(private val context: Context) : RemoteV
         }
 
         // Crear un PendingIntent para la acción
-        val pendingIntent = PendingIntent.getActivity(context, position, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, position, intent, PendingIntent.FLAG_IMMUTABLE)
 
         // Establecer el PendingIntent en la vista
         views.setOnClickPendingIntent(R.id.widget_novela_titulo, pendingIntent)
