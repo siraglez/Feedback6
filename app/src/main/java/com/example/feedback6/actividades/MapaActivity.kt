@@ -3,31 +3,23 @@ package com.example.feedback6.actividades
 import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.feedback6.R
 
-class MapaActivity : Fragment() {
+class MapaActivity : AppCompatActivity() {
 
     private lateinit var ivMapa: ImageView
     private val markers = mutableListOf<Pair<String, PointF>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadMarkers() // Cargar ubicaciones ficticias
-    }
+        setContentView(R.layout.activity_mapa) // Carga el layout de la actividad
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.activity_mapa, container, false)
-        ivMapa = view.findViewById(R.id.ivMapa)
+        ivMapa = findViewById(R.id.ivMapa) // Encuentra el ImageView
         ivMapa.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.mapa_estatico))
-        return view
+
+        loadMarkers() // Cargar ubicaciones ficticias
     }
 
     private fun loadMarkers() {
