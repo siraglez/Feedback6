@@ -99,14 +99,10 @@ class AgregarNovelaFragment : Fragment() {
         addMarker("Las Rozas", PointF(740f, 950f))
         addMarker("Villanueva de la Cañada", PointF(800f, 960f))
         addMarker("Alcobendas", PointF(710f, 900f))
-        addMarker("Móstoles", PointF(660f, 1010f))
         addMarker("Fuenlabrada", PointF(650f, 1070f))
         addMarker("Getafe", PointF(690f, 1100f))
         addMarker("Parla", PointF(740f, 1170f))
         addMarker("Majadahonda", PointF(800f, 1040f))
-        addMarker("Pozuelo de Alarcón", PointF(780f, 1080f))
-        addMarker("Torrejón de Ardoz", PointF(720f, 920f))
-        addMarker("Sebastián de Los Reyes", PointF(710f, 940f))
     }
 
     private fun addMarker(name: String, point: PointF) {

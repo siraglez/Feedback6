@@ -1,8 +1,8 @@
 package com.example.feedback6.actividades
 
-import android.graphics.BitmapFactory
 import android.graphics.PointF
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.feedback6.R
@@ -10,6 +10,7 @@ import com.example.feedback6.R
 class MapaActivity : AppCompatActivity() {
 
     private lateinit var ivMapa: ImageView
+    private lateinit var btnVolver: Button
     private val markers = mutableListOf<Pair<String, PointF>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,9 +18,15 @@ class MapaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mapa)
 
         ivMapa = findViewById(R.id.ivMapa)
-        ivMapa.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.mapa_estatico))
+        ivMapa.setImageResource(R.drawable.mapa_estatico)
 
         loadMarkers() // Cargar ubicaciones ficticias
+
+        // Configurar botón de volver
+        btnVolver = findViewById(R.id.btnVolver)
+        btnVolver.setOnClickListener {
+            finish() // Cierra la actividad actual y vuelve atrás
+        }
     }
 
     private fun loadMarkers() {
@@ -28,14 +35,10 @@ class MapaActivity : AppCompatActivity() {
         addMarker("Las Rozas", PointF(740f, 950f))
         addMarker("Villanueva de la Cañada", PointF(800f, 960f))
         addMarker("Alcobendas", PointF(710f, 900f))
-        addMarker("Móstoles", PointF(660f, 1010f))
         addMarker("Fuenlabrada", PointF(650f, 1070f))
         addMarker("Getafe", PointF(690f, 1100f))
         addMarker("Parla", PointF(740f, 1170f))
         addMarker("Majadahonda", PointF(800f, 1040f))
-        addMarker("Pozuelo de Alarcón", PointF(780f, 1080f))
-        addMarker("Torrejón de Ardoz", PointF(720f, 920f))
-        addMarker("Sebastián de Los Reyes", PointF(710f, 940f))
     }
 
     private fun addMarker(name: String, point: PointF) {
