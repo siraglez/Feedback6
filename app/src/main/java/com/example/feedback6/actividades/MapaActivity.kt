@@ -14,9 +14,9 @@ class MapaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mapa) // Carga el layout de la actividad
+        setContentView(R.layout.activity_mapa)
 
-        ivMapa = findViewById(R.id.ivMapa) // Encuentra el ImageView
+        ivMapa = findViewById(R.id.ivMapa)
         ivMapa.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.mapa_estatico))
 
         loadMarkers() // Cargar ubicaciones ficticias
