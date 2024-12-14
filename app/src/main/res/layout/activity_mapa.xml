@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/mapa_estatico"
-        android:gravity="center" />
+        android:gravity="center"/>
 
     <Button
         android:id="@+id/btnVolver"
@@ -16,9 +16,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:text="Volver"
         android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/textColor"/>
+
+    <Button
+        android:id="@+id/btnCargarMarcadores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Cargar Marcadores"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:textColor="@color/textColor"/>
 
 </RelativeLayout>

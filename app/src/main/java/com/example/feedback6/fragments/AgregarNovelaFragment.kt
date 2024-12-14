@@ -93,7 +93,6 @@ class AgregarNovelaFragment : Fragment() {
     }
 
     private fun loadMarkers() {
-        // Cargar ubicaciones ficticias
         addMarker("Madrid", PointF(820f, 1040f))
         addMarker("Boadilla del Monte", PointF(760f, 1080f))
         addMarker("Las Rozas", PointF(740f, 950f))
@@ -103,6 +102,9 @@ class AgregarNovelaFragment : Fragment() {
         addMarker("Getafe", PointF(690f, 1100f))
         addMarker("Parla", PointF(740f, 1170f))
         addMarker("Majadahonda", PointF(800f, 1040f))
+        addMarker("Pozuelo de Alarcón", PointF(780f, 1080f))
+        addMarker("Torrejón de Ardoz", PointF(720f, 920f))
+        addMarker("Sebastián de Los Reyes", PointF(710f, 940f))
     }
 
     private fun addMarker(name: String, point: PointF) {
