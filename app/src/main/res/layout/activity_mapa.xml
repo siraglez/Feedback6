@@ -9,22 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/mapa_estatico"
-        android:scaleType="fitCenter">
+        android:scaleType="fitCenter" />
 
-        <FrameLayout
-            android:id="@+id/frameMarkerContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="ChildInNonViewGroup" />
-    </ImageView>
+    <FrameLayout
+        android:id="@+id/frameMarkerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <Button
-    android:id="@+id/btnVolver"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="16dp"
-    android:text="Volver" />
-</RelativeLayout>
+        android:id="@+id/btnVolver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Volver"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/textColor"/>
 
+</RelativeLayout>
