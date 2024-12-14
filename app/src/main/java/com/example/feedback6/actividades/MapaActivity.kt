@@ -18,7 +18,6 @@ class MapaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mapa)
 
         ivMapa = findViewById(R.id.ivMapa)
-        ivMapa.setImageResource(R.drawable.mapa_estatico)
 
         loadMarkers() // Cargar ubicaciones ficticias
 
